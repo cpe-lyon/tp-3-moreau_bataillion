@@ -77,3 +77,27 @@ image
 apt show coreutils | tail -9
 ```
 
+## Exercice 5. aptitude
+
+**Installez le paquet emacs à l’aide de la version graphique d’aptitude.**
+```
+sudo aptitude
+/emacs (3e occurence)
+g
+gg
+```
+
+## Exercice 6. Installation d’un paquet par PPA
+
+Certains logiciels ne figurent pas dans les dépôts officiels. C’est le cas par exemple de la version ”officielle” de Java depuis qu’elle est développée par Oracle. Dans ces cas, on peut parfois se tourner vers un ”dépôt personnel” ou PPA.
+
+**1.Installer la version Oracle de Java (avec l’ajout des PPA)**
+```
+sudo add-apt-repository ppa:linuxuprising/java
+sudo apt update
+sudo apt install oracle-java11-installer-local
+```
+
+**2.Vérifiez qu’un nouveau fichier a été créé dans /etc/apt/sources.list.d. Que contient-il?**
+
+No
