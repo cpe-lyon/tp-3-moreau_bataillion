@@ -51,4 +51,25 @@ puis mettre à jour le fichier bashrc avec source .bashrc
 On installe le paquet gnome-sudoku
 
 **7.Lister les derniers paquets installés explicitement avec la commande apt install**
+```
+grep "install" /var/log/dpkg.log | tail -5
+```
+## Exercice 2.
+
+**A partir de quel paquet est installée la commande ls? Comment obtenir cette information en une seule commande, pour n’importe quel programme (indice : la réponse est dans le poly de cours 2, dans la liste des commandes utiles)? Utilisez la réponse à pour écrire un script appelé origine-commande(sans l’extension.sh) prenant en argument le nom d’une commande, et indiquant quel paquet l’a installée.**
+
+
+ls est installé à partir du package coreutils. On obtient ce résulat grâce à : ```dpkg -S $(which -a ls)```
+
+On crée un script origine-commande qui renvoit le package dont provient la commande rentrée par l'utilisateur :
+image
+
+## Exercice 3.
+
+**Ecrire une commande qui affiche “INSTALLÉ” ou “NON INSTALLÉ” selon le nom et le statut du package spécifié dans cette commande.**
+
+
+
+
+
 
