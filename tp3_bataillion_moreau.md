@@ -68,8 +68,12 @@ image
 
 **Ecrire une commande qui affiche “INSTALLÉ” ou “NON INSTALLÉ” selon le nom et le statut du package spécifié dans cette commande.**
 
+image
 
+## Exercice 4.
 
-
-
+**Lister les programmes livrés avec coreutils. A quoi sert la commande ’[’ et comment aﬀicher ce qu’elle retourne?**
+```
+apt show coreutils | tail -9
+```
 
