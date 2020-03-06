@@ -111,7 +111,8 @@ programmes que vous écrivez comme s’ils provenaient de dépôts officiels.
 sous-dossier DEBIAN, ainsi que l’arborescence usr/local/bin où vous placerez le script écrit à l’exercice
 2**
 
-**2. Dans le dossier DEBIAN, créez un fichier control avec les champs suivants :**
+
+**2. Dans le dossier DEBIAN, créez un fichier control avec les champs suivants :**  
 Package: origine-commande #nom du paquet
 Version: 0.1 #numéro de version
 Maintainer: Foo Bar #votre nom
