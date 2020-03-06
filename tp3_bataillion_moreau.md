@@ -99,5 +99,90 @@ sudo apt install oracle-java11-installer-local
 ```
 
 **2.Vérifiez qu’un nouveau fichier a été créé dans /etc/apt/sources.list.d. Que contient-il?**
+Le fichier contient des lignes APT qui contiennent des informations sur les dépots de paquets de notre linux.
 
-No
+## Exercice 7. Création de dépôt personnalisé
+
+Dans cet exercice, vous allez créer vos propres paquets et dépôts, ce qui vous permettra de gérer les
+programmes que vous écrivez comme s’ils provenaient de dépôts officiels.
+
+### Création d’un paquet Debian avec dpkg-deb
+**1. Dans le dossier scripts créé lors du TP 2, créez un sous-dossier origine-commande où vous créerez un
+sous-dossier DEBIAN, ainsi que l’arborescence usr/local/bin où vous placerez le script écrit à l’exercice
+2**
+
+**2. Dans le dossier DEBIAN, créez un fichier control avec les champs suivants :**
+Package: origine-commande #nom du paquet
+Version: 0.1 #numéro de version
+Maintainer: Foo Bar #votre nom
+Architecture: all #les architectures cibles de notre paquet (i386, amd64...)
+Description: Cherche l'origine d'une commande
+Section: utils #notre programme est un utilitaire
+Priority: optional #ce n'est pas un paquet indispendable
+
+**3. Revenez dans le dossier parent de origine-commande (normalement, c’est votre $HOME) et tapez la
+commande suivante pour construire le paquet :**
+`dpkg-deb --build origine-commande`
+Félicitations ! Vous avez créé votre propre paquet !
+
+### Création du dépôt personnel avec reprepro
+**1. Dans votre dossier personnel, commencez par créer un dossier repo-cpe. Ce sera la racine de votre
+dépôt**
+
+**2. Ajoutez-y deux sous-dossiers : conf (qui contiendra la configuration du dépôt) et packages (qui contiendra
+nos paquets)**
+
+**3. Dans conf, créez le fichier distributions suivant :**
+Origin: Un nom, une URL, ou tout texte expliquant la provenance du dépôt
+Label: Nom du dépôt
+// Suite: stable
+Codename: cosmic #le nom de la distribution cible
+Architectures: i386 amd64 #(architectures cibles)
+Components: universe #(correspond à notre cas)
+Description: Une description du dépôt
+**4. Dans le dossier repo-cpe, générez l’arborescence du dépôt avec la commande**
+`reprepro -b . export`
+
+**5. Copiez le paquet origine-commande.deb créé précédemment dans le dossier packages du dépôt, puis,
+à la racine du dépôt, exécutez la commande**
+`reprepro -b . includedeb cosmic origine-commande.deb`
+afin que votre paquet soit inscrit dans le dépôt.
+
+**6. Il faut à présent indiquer à apt qu’il existe un nouveau dépôt dans lequel il peut trouver des logiciels.
+Pour cela, créez (avec sudo) dans le dossier /etc/apt/sources.list.d le fichier repo-cpe.list
+contenant :**
+deb file:/home/VOTRE_NOM/repo-cpe cosmic multiverse
+(cette ligne reprend la configuration du dépôt, elle est à adapter au besoin)
+
+**7. Lancez la commande sudo apt update.**
+
+Féliciations ! Votre dépôt est désormais pris en compte ! ... Enfin, pas tout à fait... Si vous regardez
+la sortie d’apt update, il est précidé que le dépôt ne peut être pris en compte car il n’est pas signé.
+La signature permet de vérifier qu’un paquet provient bien du bon dépôt. On doit donc signer notre
+dépôt.
+
+### Signature du dépôt avec GPG
+GPG est la version GNU du protocole PGP (Pretty Good Privacy), qui permet d’échanger des données de
+manière sécurisée. Ce système repose sur la notion de clés de chiffrement asymétriques (une clé publique et
+une clé privée)
+**1. Commencez par créer une nouvelle paire de clés avec la commande**
+`gpg --gen-key`
+Attention ! N’oubliez pas votre passphrase !!!
+
+**2. Ajoutez à la configuration du dépôt (fichier distributions la ligne suivante :**
+`SignWith: yes`
+
+**3. Ajoutez la clé à votre dépôt :**
+`reprepro --ask-passphrase -b . export`
+
+Attention ! Cette méthode n’est pas sécurisée et obsolète ; dans un contexte professionnel, on utiliserait
+plutot un gpg-agent.
+
+**4. Ajoutez votre clé publique à votre dépôt avec la commande**
+`gpg --export -a "auteur" > public.key`
+
+**5. Enfin, ajoutez cette clé à la liste des clés fiables connues de apt :**
+`sudo apt-key add public.key`
+
+Félicitations ! La configuration est (enfin) terminée ! Vérifiez que vous pouvez installer votre paquet comme
+n’importe quel autre paquet.
