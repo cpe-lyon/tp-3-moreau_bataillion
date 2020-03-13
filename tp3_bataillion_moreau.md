@@ -1,3 +1,7 @@
+BATAILLION Alice
+MOREAU Marianne
+4 ETI
+
 # TP 3 - Gestion des paquets
 
 ## Exercice 1. Commandes de base
